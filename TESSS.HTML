@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kirim Pesan ke Bot Telegram</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #2b90d9;
+      --primary-dark: #1c6ca1;
+      --success: #28a745;
+      --danger: #dc3545;
+      --warning: #ffc107;
+      --light: #f8f9fa;
+      --dark: #343a40;
+      --gray: #6c757d;
+      --border-radius: 12px;
+      --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f3f4f6 0%, #e9ecef 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+      color: var(--dark);
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      width: 100%;
+      max-width: 450px;
+      transition: var(--transition);
+    }
+
+    .container:hover {
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 25px;
+      position: relative;
+    }
+
+    .header::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 4px;
+      background: var(--primary);
+      margin: 10px auto 0;
+      border-radius: 2px;
+    }
+
+    .header h3 {
+      color: var(--dark);
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .header i {
+      color: var(--primary);
+      margin-right: 10px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--dark);
+      font-size: 14px;
+    }
+
+    .input-with-icon {
+      position: relative;
+    }
+
+    .input-with-icon i {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray);
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px 15px 12px 40px;
+      border: 1px solid #ddd;
+      border-radius: var(--border-radius);
+      font-size: 15px;
+      transition: var(--transition);
+      background-color: var(--light);
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(43, 144, 217, 0.2);
+      background-color: white;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+      padding-left: 15px;
+    }
+
+    .input-with-icon textarea {
+      padding-left: 15px;
+    }
+
+    .char-counter {
+      text-align: right;
+      font-size: 12px;
+      color: var(--gray);
+      margin-top: 5px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    button:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(43, 144, 217, 0.3);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    button:disabled {
+      background-color: var(--gray);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .status {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: var(--border-radius);
+      font-size: 14px;
+      text-align: center;
+      display: none;
+    }
+
+    .status.success {
+      background-color: rgba(40, 167, 69, 0.1);
+      color: var(--success);
+      border: 1px solid rgba(40, 167, 69, 0.3);
+      display: block;
+    }
+
+    .status.error {
+      background-color: rgba(220, 53, 69, 0.1);
+      color: var(--danger);
+      border: 1px solid rgba(220, 53, 69, 0.3);
+      display: block;
+    }
+
+    .status.warning {
+      background-color: rgba(255, 193, 7, 0.1);
+      color: var(--warning);
+      border: 1px solid rgba(255, 193, 7, 0.3);
+      display: block;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 25px;
+      font-size: 13px;
+      color: var(--gray);
+    }
+
+    .footer a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px;
+      }
+      
+      .header h3 {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header">
+      <h3><i class="fab fa-telegram"></i> Kirim Pesan ke Bot Telegram</h3>
+    </div>
+
+    <div class="form-group">
+      <label for="token"><i class="fas fa-key"></i> Token Bot</label>
+      <div class="input-with-icon">
+        <i class="fas fa-key"></i>
+        <input type="text" id="token" placeholder="Masukkan token bot">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="chatId"><i class="fas fa-id-card"></i> Chat ID</label>
+      <div class="input-with-icon">
+        <i class="fas fa-id-card"></i>
+        <input type="text" id="chatId" placeholder="Masukkan chat ID">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="message"><i class="fas fa-comment"></i> Pesan</label>
+      <textarea id="message" placeholder="Tulis pesan yang ingin dikirim"></textarea>
+      <div class="char-counter"><span id="charCount">0</span>/4000</div>
+    </div>
+
+    <button id="sendButton" onclick="sendMessage()">
+      <i class="fas fa-paper-plane"></i> Kirim Pesan
+    </button>
+
+    <div class="status" id="status"></div>
+
+    <div class="footer">
+      <p>Dibuat dengan <i class="fas fa-heart" style="color: #e74c3c;"></i> | <a href="https://core.telegram.org/bots" target="_blank">Pelajari tentang Bot Telegram</a></p>
+    </div>
+  </div>
+
+  <script>
+    // Menghitung karakter pesan
+    document.getElementById('message').addEventListener('input', function() {
+      const charCount = this.value.length;
+      document.getElementById('charCount').textContent = charCount;
+      
+      if (charCount > 4000) {
+        this.style.borderColor = 'var(--danger)';
+        document.getElementById('charCount').style.color = 'var(--danger)';
+      } else {
+        this.style.borderColor = '';
+        document.getElementById('charCount').style.color = 'var(--gray)';
+      }
+    });
+
+    async function sendMessage() {
+      const token = document.getElementById("token").value.trim();
+      const chatId = document.getElementById("chatId").value.trim();
+      const message = document.getElementById("message").value.trim();
+      const statusDiv = document.getElementById("status");
+      const sendButton = document.getElementById("sendButton");
+      
+      // Reset status
+      statusDiv.className = "status";
+      
+      // Validasi input
+      if (!token || !chatId || !message) {
+        statusDiv.textContent = "Harap isi semua kolom!";
+        statusDiv.classList.add("error");
+        return;
+      }
+      
+      if (message.length > 4000) {
+        statusDiv.textContent = "Pesan terlalu panjang (maksimal 4000 karakter)!";
+        statusDiv.classList.add("error");
+        return;
+      }
+      
+      // Tampilkan loading state
+      sendButton.disabled = true;
+      sendButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengirim...';
+      
+      const url = `https://api.telegram.org/bot${token}/sendMessage`;
+      const data = {
+        chat_id: chatId,
+        text: message
+      };
+
+      try {
+        const res = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        const result = await res.json();
+
+        if (result.ok) {
+          statusDiv.textContent = "Pesan berhasil dikirim ✅";
+          statusDiv.classList.add("success");
+          
+          // Reset form setelah berhasil
+          document.getElementById("message").value = "";
+          document.getElementById("charCount").textContent = "0";
+        } else {
+          statusDiv.textContent = "Gagal mengirim: " + result.description;
+          statusDiv.classList.add("error");
+        }
+      } catch (err) {
+        statusDiv.textContent = "Terjadi kesalahan: " + err.message;
+        statusDiv.classList.add("error");
+      } finally {
+        // Reset button state
+        sendButton.disabled = false;
+        sendButton.innerHTML = '<i class="fas fa-paper-plane"></i> Kirim Pesan';
+      }
+    }
+    
+    // Tambahkan event listener untuk tombol Enter
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+        sendMessage();
+      }
+    });
+  </script>
+
+</body>
+</html>
